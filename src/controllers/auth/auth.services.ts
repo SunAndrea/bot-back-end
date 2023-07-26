@@ -3,7 +3,7 @@ import { IRegister } from "./auth.types";
 import bcrypt from "bcryptjs";
 
 export default class AuthService {
-  async registerUser(data: IRegister): Promise<true | string> {
+  async registerUser(data: IRegister): Promise<object | string> {
     const { email, password, name } = data;
     const user = await User.findOne({ email });
     if (user) {
@@ -19,6 +19,8 @@ export default class AuthService {
     if (!newUser) {
       return "Something went wrong";
     }
-    return true;
+    const newUserObject = newUser.toObject();
+    const { password: pass, ...userWithPassword } = newUserObject;
+    return userWithPassword;
   }
 }

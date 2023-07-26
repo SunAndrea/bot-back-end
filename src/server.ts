@@ -1,5 +1,8 @@
-import { App } from "app";
+import { Tcp } from "./tcp"; 
 
-const app = new App();
-app.init()
+async function startServer() {
+  const tcp = new Tcp();
+  await tcp.init(); 
+}
 
+startServer(); 

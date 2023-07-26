@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose";
 import { IUser } from "types/user";
-// import { Joi } from "joi";
+
+import Joi from "joi";
 
 const userSchema = new Schema<IUser>(
   {
@@ -32,6 +33,11 @@ const userSchema = new Schema<IUser>(
   { versionKey: false, timestamps: true }
 );
 
+export const registerSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
+  name: Joi.string().required(),
+});
+
 const User = model("user", userSchema);
 export default User;
-
