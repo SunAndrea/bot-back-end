@@ -1,9 +1,9 @@
-export class CustomError extends Error {
+export class CustomError {
   code: number;
-
+  message: string;
   constructor(code: number, message: string) {
-    super(message);
     this.code = code;
+    this.message = message;
   }
 }
 export const createCustomError = (code: number, message: string) => {

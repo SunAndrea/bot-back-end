@@ -3,6 +3,7 @@ import User from "../../models/users.model";
 import { ILogin, IRegister } from "./auth.types";
 import bcrypt from "bcryptjs";
 import Jwt from "jsonwebtoken";
+import createHttpError from "http-errors";
 
 require("dotenv").config();
 
@@ -54,5 +55,19 @@ export default class AuthService {
     ).select("-password");
 
     return loginedUser;
+  }
+  async logout(req: any) {
+    console.log("logout", req);
+    const existingUser = await User.findById(req);
+    console.log(`existingUser`, existingUser);
+    if (!existingUser) {
+      throw createHttpError(404, "User not found");
+    } else {
+      return await User.findByIdAndUpdate(
+        req,
+        { token: null },
+        { new: true }
+      ).select("-password");
+    }
   }
 }

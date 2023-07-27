@@ -1,26 +1,26 @@
-import { Tcp } from './tcp';
+// import { Tcp } from "./tcp";
 
-import { IService } from 'types/serves';
+// import { IService } from "types/serves";
 
-export class App implements IService {
-  private static instance:App;
+// export class App implements IService {
+//   private static instance: App;
 
-  private tcp:IService = new Tcp();
+//   private tcp: IService = new Tcp();
 
-  constructor () {
-    if (!App.instance) {
-      App.instance = this;
-    }
+//   constructor() {
+//     if (!App.instance) {
+//       App.instance = this;
+//     }
 
-    return App.instance;
-  }
+//     return App.instance;
+//   }
 
-  async init () {
-    const { tcp } = this;
-    console.log('App started');
+//   async init() {
+//     const { tcp } = this;
+//     console.log("App started");
 
-    await tcp.init();
+//     await tcp.init();
 
-    return true;
-  }
-}
+//     return true;
+//   }
+// }

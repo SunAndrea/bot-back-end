@@ -8,11 +8,11 @@ export function errorHandler(
   res: Response,
   _next: NextFunction
 ) {
+  console.log(`asfasfasf`, err);
   if (err instanceof CustomError) {
-    return res.status(err.code).json({ error: err.message });
+    const { code, message } = err;
+    res.status(code).json({ error: message });
   } else {
-    // Обробка інших типів помилок тут
-    console.error(`err`, err);
-    return res.status(500).json({ error: "Внутрішня помилка сервера" });
+    res.status(500).json({ error: "Ethernal server error" });
   }
 }
