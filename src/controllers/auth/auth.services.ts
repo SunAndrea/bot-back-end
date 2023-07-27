@@ -1,7 +1,12 @@
+import { createCustomError } from "helpers/createError";
 import User from "../../models/users.model";
-import { IRegister } from "./auth.types";
+import { ILogin, IRegister } from "./auth.types";
 import bcrypt from "bcryptjs";
+import Jwt from "jsonwebtoken";
 
+require("dotenv").config();
+
+const JWT_SECRET = process.env.JWT_SECRET as string;
 export default class AuthService {
   async registerUser(data: IRegister): Promise<object | string> {
     const { email, password, name } = data;
@@ -22,5 +27,32 @@ export default class AuthService {
     const newUserObject = newUser.toObject();
     const { password: pass, ...userWithPassword } = newUserObject;
     return userWithPassword;
+  }
+  async login(data: ILogin): Promise<any> {
+    const { email, password } = data;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return "Number or password is wrong";
+    }
+
+    const passwordCompare = await bcrypt.compare(password, user.password);
+    if (!passwordCompare) {
+      // return "Number or password is wrong";
+      throw createCustomError(402, "Number or password is wrong");
+    }
+
+    const payload = {
+      id: user._id,
+    };
+
+    const token = Jwt.sign(payload, JWT_SECRET, { expiresIn: "24h" });
+
+    const loginedUser = await User.findByIdAndUpdate(
+      user._id,
+      { token },
+      { new: true }
+    ).select("-password");
+
+    return loginedUser;
   }
 }

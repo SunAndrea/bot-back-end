@@ -3,10 +3,11 @@ require("dotenv").config();
 
 import express from "express";
 import { useExpressServer } from "routing-controllers";
-
+import { json } from "body-parser";
 import { controllers } from "./controllers";
 import { IService } from "types/serves";
 import mongoose from "mongoose";
+import { errorHandler } from "helpers/errorHandler";
 
 const DB_URI = process.env.DB_URI as string;
 const PORT = process.env.PORT;
@@ -28,6 +29,8 @@ export class Tcp implements IService {
   async init() {
     const { server, routePrefix } = this;
 
+    server.use(json());
+    server.use(errorHandler);
     useExpressServer(server, {
       routePrefix,
       controllers,

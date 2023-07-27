@@ -6,7 +6,7 @@ import {
   UseBefore,
 } from "routing-controllers";
 import AuthService from "./auth.services";
-import { IRegister } from "./auth.types";
+import { ILogin, IRegister } from "./auth.types";
 import validationMiddleware from "middlewares/validation.middlewares";
 import { registerSchema } from "models/users.model";
 
@@ -25,6 +25,15 @@ export default class AuthController {
         console.log(result);
         return res.status(200).send(result);
       }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  @Post("/login")
+  async login(@Body() body: ILogin, @Res() res: any) {
+    try {
+      const result = await this.authService.login(body);
+      return res.status(200).send(result);
     } catch (error) {
       console.log(error);
     }

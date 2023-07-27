@@ -1,11 +1,11 @@
-export const createError = (status = 500, message = "Something went wrong") => {
-  class UserError extends Error {
-    code = status;
+export class CustomError extends Error {
+  code: number;
 
-    constructor(message: string | undefined) {
-      super(message);
-    }
+  constructor(code: number, message: string) {
+    super(message);
+    this.code = code;
   }
-
-  return new UserError(message);
+}
+export const createCustomError = (code: number, message: string) => {
+  return new CustomError(code, message);
 };
