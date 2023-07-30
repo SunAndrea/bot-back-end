@@ -1,8 +1,7 @@
-// import { createCustomError } from "helpers/createError";
+import { CustomError } from "../helpers/createError";
 import { Request, Response, NextFunction } from "express";
 import Jwt, { JwtPayload } from "jsonwebtoken";
 import User from "../models/users.model";
-import createHttpError from "http-errors";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
@@ -29,7 +28,7 @@ export async function authorizeMiddleware(
   const [bearer, token] = authorization.split(" ");
 
   if (bearer !== "Bearer" || !token) {
-    return next(createHttpError(401, "Authorization header is invalid"));
+    throw new CustomError(401, "Authhorization header is invalid");
   }
 
   try {
@@ -40,13 +39,13 @@ export async function authorizeMiddleware(
     console.log(`user`, user);
 
     if (!user || !user.token) {
-      throw createHttpError(401, "Not authorized");
+      throw new CustomError(401, "Not authorized");
     }
 
     req.user = user as unknown as IUser;
     console.log("req.user", req.user);
     next();
   } catch (error) {
-    console.log(error);
+    console.log(`error`, error);
   }
 }

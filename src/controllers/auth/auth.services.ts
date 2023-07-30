@@ -1,9 +1,8 @@
-import { createCustomError } from "helpers/createError";
+import { CustomError } from "../../helpers/createError";
 import User from "../../models/users.model";
 import { ILogin, IRegister } from "./auth.types";
 import bcrypt from "bcryptjs";
 import Jwt from "jsonwebtoken";
-import createHttpError from "http-errors";
 
 require("dotenv").config();
 
@@ -33,13 +32,13 @@ export default class AuthService {
     const { email, password } = data;
     const user = await User.findOne({ email });
     if (!user) {
-      return "Number or password is wrong";
+      throw new CustomError(402, "Number or password is wrong");
     }
 
     const passwordCompare = await bcrypt.compare(password, user.password);
     if (!passwordCompare) {
       // return "Number or password is wrong";
-      throw createCustomError(402, "Number or password is wrong");
+      throw new CustomError(402, "Number or password is wrong");
     }
 
     const payload = {
@@ -61,7 +60,7 @@ export default class AuthService {
     const existingUser = await User.findById(req);
     console.log(`existingUser`, existingUser);
     if (!existingUser) {
-      throw createHttpError(404, "User not found");
+      throw new CustomError(404, "User not found");
     } else {
       return await User.findByIdAndUpdate(
         req,
